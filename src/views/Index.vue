@@ -40,14 +40,14 @@
         <div v-if="currentView === 'accounts' && holdings.length" class="account-summary-strip !justify-between">
           <div class="flex items-center">
             <span>账户资产：</span>
-            <span>{{ account_assets }}</span>
+            <span>{{ isHidden ? '**' : account_assets }}</span>
             <img class="w-[16px] h-[16px] ml-2" src="../../public/assets/look.png" @click="hide"/>
           </div>
           <div>
             <span class="label mr-2">预估收益:</span>
             <span class="value" :class="getColorClass(totalEstimatedIncome)">
-            {{ formatValue(totalEstimatedIncome) }}
-          </span>
+    {{ isHidden ? '**' : formatValue(totalEstimatedIncome) }}
+  </span>
           </div>
         </div>
       </div>
@@ -141,13 +141,17 @@
             <tr v-for="f in holdings" :key="f.code">
               <td>
                 <div class="f-name">{{ f.short_name }}</div>
-                <div class="f-code">{{ f.code }} 💰{{ f.money }}</div>
+                <div class="f-code">{{ f.code }} 💰{{ isHidden ? '**' : f.money }}</div>
               </td>
               <td :class="getColorClass(getGszzl(f))">{{ formatValue(getGszzl(f)) }}%</td>
-              <td class="text-center" :class="getColorClass(calcEarn(f))">{{ formatValue(calcEarn(f)) }}</td>
+              <td class="text-center" :class="getColorClass(calcEarn(f))">{{
+                  isHidden ? '**' : formatValue(calcEarn(f))
+                }}
+              </td>
               <td class="text-center flex flex-col" :class="getColorClass(f.hold_earn)">
-                <span class="font-bold">{{ formatValue(f.hold_earn) }}</span>
-                <span class="text-[13px]" :class="getColorClass(calcRate(f))">{{ formatValue(calcRate(f)) }}%</span>
+                <span class="font-bold">{{ isHidden ? '**' : formatValue(f.hold_earn) }}</span>
+                <span class="text-[13px]"
+                      :class="getColorClass(calcRate(f))">{{ isHidden ? '**' : formatValue(calcRate(f)) + '%' }}</span>
               </td>
             </tr>
             </tbody>
@@ -176,6 +180,11 @@ const qrUrl = ref('');
 const loginStatusText = ref('');
 const accountList = ref([]);
 const selectedAccId = ref(null);
+const isHidden = ref(false);
+const hide = () => {
+  isHidden.value = !isHidden.value;
+};
+
 const holdings = ref([]);
 // 排序状态管理
 const sortState = ref({
@@ -220,7 +229,7 @@ const applyMultiSort = () => {
 
   // 按照排序规则逐个应用排序
   multiSortRules.value.forEach(rule => {
-    const { column, direction } = rule;
+    const {column, direction} = rule;
 
     holdings.value.sort((a, b) => {
       let valueA, valueB;
@@ -273,7 +282,6 @@ const getSortIcon = (column, direction) => {
     return isActive ? '../assets/d.png' : '../assets/d1.png'; // 高亮/默认向下图标
   }
 };
-
 
 
 const generateSign = (path, token, timestamp) => {
