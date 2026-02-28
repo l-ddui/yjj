@@ -32,3 +32,4 @@ jobs:
           publish_dir: ./dist # React 改为 ./build
           # 可选：强制推送（解决分支历史冲突）
           force_orphan: true
+          clean: true
