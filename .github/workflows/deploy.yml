@@ -1,13 +1,21 @@
 name: Deploy to GitHub Pages
 on:
   push:
-    branches: [master] # 监听 main 分支推送
+    branches: [master]
+# 新增：配置权限（关键修复）
+permissions:
+  contents: write # 授予写入仓库内容的权限
+  pages: write # 授予操作 Pages 的权限
+  id-token: write # 授予 ID 令牌权限（HTTPS 必需）
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: 拉取源码
         uses: actions/checkout@v4
+        # 新增：拉取所有历史记录（避免分支冲突）
+        with:
+          fetch-depth: 0
       - name: 安装 Node.js
         uses: actions/setup-node@v4
         with:
@@ -16,9 +24,11 @@ jobs:
       - name: 安装依赖
         run: npm install
       - name: 构建项目
-        run: npm run build # React 为 npm run build，输出到 build 目录
+        run: npm run build
       - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist # React 改为 ./build
+          # 可选：强制推送（解决分支历史冲突）
+          force_orphan: true
