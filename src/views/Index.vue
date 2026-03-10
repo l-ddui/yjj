@@ -11,7 +11,7 @@
       <div class="card">
         <h3>微信扫码登录</h3>
         <div v-if="qrUrl" class="qr-box">
-          <img :src="`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`"/>
+          <img :src="`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`" />
           <p class="blink-text">{{ loginStatusText }}</p>
         </div>
         <button v-else @click="getQrCode" class="btn-primary" :disabled="loading">
@@ -24,13 +24,8 @@
       <div class="fixed-top-area">
         <div v-if="currentView === 'accounts'" class="account-tab-header">
           <div class="account-tabs">
-            <div
-                v-for="(acc,index) in accountList"
-                :key="acc.id"
-                class="tab-item"
-                :class="{ active: selectedAccId === acc.id }"
-                @click="selectAccount(acc.id)"
-            >
+            <div v-for="(acc, index) in accountList" :key="acc.id" class="tab-item"
+              :class="{ active: selectedAccId === acc.id }" @click="selectAccount(acc.id)">
               <div class="acc-title">{{ acc.title }}</div>
             </div>
           </div>
@@ -41,13 +36,13 @@
           <div class="flex items-center">
             <span>账户资产：</span>
             <span>{{ isHidden ? '**' : account_assets }}</span>
-            <img class="w-[16px] h-[16px] ml-2" src="../../public/assets/look.png" @click="hide"/>
+            <img class="w-[16px] h-[16px] ml-2" src="../../public/assets/look.png" @click="hide" />
           </div>
           <div>
             <span class="label mr-2">预估收益:</span>
             <span class="value" :class="getColorClass(totalEstimatedIncome)">
-    {{ isHidden ? '**' : formatValue(totalEstimatedIncome) }}
-  </span>
+              {{ formatValue(totalEstimatedIncome) }}
+            </span>
           </div>
         </div>
       </div>
@@ -61,99 +56,69 @@
         <div v-if="currentView === 'accounts' && selectedAccId" class="detail-section">
           <table v-show="!loading" class="sticky-table">
             <thead>
-            <tr>
-              <th class="col-name">
-                <div class="header-container">
-                  <span>基金名称</span>
-                  <div class="sort-buttons">
-                    <!-- 动态绑定图标 -->
-                    <img
-                        :src="getSortIcon('money', 'asc')"
-                        @click="sortColumn('money', 'asc')"
-                        class="sort-btn"
-                    />
-                    <img
-                        :src="getSortIcon('money', 'desc')"
-                        @click="sortColumn('money', 'desc')"
-                        class="sort-btn"
-                    />
+              <tr>
+                <th class="col-name">
+                  <div class="header-container">
+                    <span>基金名称</span>
+                    <div class="sort-buttons">
+                      <!-- 动态绑定图标 -->
+                      <img :src="getSortIcon('money', 'asc')" @click="sortColumn('money', 'asc')" class="sort-btn" />
+                      <img :src="getSortIcon('money', 'desc')" @click="sortColumn('money', 'desc')" class="sort-btn" />
+                    </div>
                   </div>
-                </div>
-              </th>
+                </th>
 
-              <th class="col-rate">
-                <div class="header-container">
-                  <span>日涨幅</span>
-                  <div class="sort-buttons">
-                    <img
-                        :src="getSortIcon('rate', 'asc')"
-                        @click="sortColumn('rate', 'asc')"
-                        class="sort-btn"
-                    />
-                    <img
-                        :src="getSortIcon('rate', 'desc')"
-                        @click="sortColumn('rate', 'desc')"
-                        class="sort-btn"
-                    />
+                <th class="col-rate">
+                  <div class="header-container">
+                    <span>日涨幅</span>
+                    <div class="sort-buttons">
+                      <img :src="getSortIcon('rate', 'asc')" @click="sortColumn('rate', 'asc')" class="sort-btn" />
+                      <img :src="getSortIcon('rate', 'desc')" @click="sortColumn('rate', 'desc')" class="sort-btn" />
+                    </div>
                   </div>
-                </div>
-              </th>
+                </th>
 
-              <th class="col-earn">
-                <div class="header-container">
-                  <span>日收益</span>
-                  <div class="sort-buttons">
-                    <img
-                        :src="getSortIcon('earn', 'asc')"
-                        @click="sortColumn('earn', 'asc')"
-                        class="sort-btn"
-                    />
-                    <img
-                        :src="getSortIcon('earn', 'desc')"
-                        @click="sortColumn('earn', 'desc')"
-                        class="sort-btn"
-                    />
+                <th class="col-earn">
+                  <div class="header-container">
+                    <span>日收益</span>
+                    <div class="sort-buttons">
+                      <img :src="getSortIcon('earn', 'asc')" @click="sortColumn('earn', 'asc')" class="sort-btn" />
+                      <img :src="getSortIcon('earn', 'desc')" @click="sortColumn('earn', 'desc')" class="sort-btn" />
+                    </div>
                   </div>
-                </div>
-              </th>
+                </th>
 
-              <th class="col-hold">
-                <div class="header-container">
-                  <span>持有收益</span>
-                  <div class="sort-buttons">
-                    <img
-                        :src="getSortIcon('hold', 'asc')"
-                        @click="sortColumn('hold', 'asc')"
-                        class="sort-btn"
-                    />
-                    <img
-                        :src="getSortIcon('hold', 'desc')"
-                        @click="sortColumn('hold', 'desc')"
-                        class="sort-btn"
-                    />
+                <th class="col-hold">
+                  <div class="header-container">
+                    <span>持有收益</span>
+                    <div class="sort-buttons">
+                      <img :src="getSortIcon('hold', 'asc')" @click="sortColumn('hold', 'asc')" class="sort-btn" />
+                      <img :src="getSortIcon('hold', 'desc')" @click="sortColumn('hold', 'desc')" class="sort-btn" />
+                    </div>
                   </div>
-                </div>
-              </th>
+                </th>
 
-            </tr>
+              </tr>
             </thead>
             <tbody>
-            <tr v-for="f in holdings" :key="f.code">
-              <td>
-                <div class="f-name">{{ f.short_name }}</div>
-                <div class="f-code">{{ f.code }} 💰{{ isHidden ? '**' : f.money }}</div>
-              </td>
-              <td :class="getColorClass(getGszzl(f))">{{ formatValue(getGszzl(f)) }}%</td>
-              <td class="text-center" :class="getColorClass(calcEarn(f))">{{
+              <tr v-for="f in holdings" :key="f.code">
+                <td>
+                  <div class="f-name">{{ f.short_name }}</div>
+                  <div class="f-code">{{ f.code }} 💰{{ isHidden ? '**' : f.money }}</div>
+                </td>
+                <td :class="getColorClass(getGszzl(f))">{{ formatValue(getGszzl(f)) }}%</td>
+                <td class="text-center" :class="getColorClass(calcEarn(f))">{{
                   isHidden ? '**' : formatValue(calcEarn(f))
                 }}
-              </td>
-              <td class="text-center flex flex-col" :class="getColorClass(f.hold_earn)">
-                <span class="font-bold">{{ isHidden ? '**' : formatValue(f.hold_earn) }}</span>
-                <span class="text-[13px]"
-                      :class="getColorClass(calcRate(f))">{{ isHidden ? '**' : formatValue(calcRate(f)) + '%' }}</span>
-              </td>
-            </tr>
+                </td>
+                <td class="text-center flex flex-col" :class="getColorClass(f.hold_earn)">
+                  <span class="font-bold">{{ isHidden ? '**' : formatValue(f.hold_earn) }}</span>
+                  <span class="text-[13px]" :class="getColorClass(calcRate(f))">{{
+                    formatValue(calcRate(f)) + '%'
+                  }}</span>
+
+                </td>
+              </tr>
             </tbody>
           </table>
           <div v-if="!loading && !holdings.length" class="empty-state">该账户暂无持仓</div>
@@ -166,7 +131,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 
@@ -208,8 +173,8 @@ const multiSortRules = ref([]);
 const sortColumn = (column, direction) => {
   // 判断是否点击了相同的排序规则
   const isSameRule = multiSortRules.value.length > 0 &&
-      multiSortRules.value[0].column === column &&
-      multiSortRules.value[0].direction === direction;
+    multiSortRules.value[0].column === column &&
+    multiSortRules.value[0].direction === direction;
 
   if (isSameRule) {
     // 如果点击了相同的排序规则，恢复原始默认排序
@@ -217,7 +182,7 @@ const sortColumn = (column, direction) => {
     holdings.value = [...originalHoldings.value];
   } else {
     // 否则，清空之前的排序规则，只保留当前点击的排序规则
-    multiSortRules.value = [{column, direction}];
+    multiSortRules.value = [{ column, direction }];
     applyMultiSort();
   }
 };
@@ -229,7 +194,7 @@ const applyMultiSort = () => {
 
   // 按照排序规则逐个应用排序
   multiSortRules.value.forEach(rule => {
-    const {column, direction} = rule;
+    const { column, direction } = rule;
 
     holdings.value.sort((a, b) => {
       let valueA, valueB;
@@ -273,13 +238,13 @@ const applyMultiSort = () => {
 const getSortIcon = (column, direction) => {
   // 判断当前列是否在排序规则中
   const isActive = multiSortRules.value.some(
-      rule => rule.column === column && rule.direction === direction
+    rule => rule.column === column && rule.direction === direction
   );
 
   if (direction === 'asc') {
-    return isActive ? '../assets/u.png' : '../assets/u1.png'; // 高亮/默认向上图标
+    return isActive ? '/assets/u.png' : '/assets/u1.png'; // 高亮/默认向上图标
   } else {
-    return isActive ? '../assets/d.png' : '../assets/d1.png'; // 高亮/默认向下图标
+    return isActive ? '/assets/d.png' : '/assets/d1.png'; // 高亮/默认向下图标
   }
 };
 
@@ -390,7 +355,7 @@ const formatValue = (value) => {
 };
 
 const totalEstimatedIncome = computed(() =>
-    holdings.value.reduce((sum, f) => sum + parseFloat(calcEarn(f)), 0)
+  holdings.value.reduce((sum, f) => sum + parseFloat(calcEarn(f)), 0)
 );
 
 onMounted(() => {
@@ -423,7 +388,8 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px; /* 标题与按钮之间的间距 */
+  gap: 4px;
+  /* 标题与按钮之间的间距 */
 }
 
 /* 排序按钮容器：垂直排列两个按钮 */
@@ -431,7 +397,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px; /* 按钮之间的间距 */
+  gap: 2px;
+  /* 按钮之间的间距 */
 }
 
 /* 排序按钮样式 */
@@ -484,6 +451,7 @@ onMounted(() => {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

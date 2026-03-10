@@ -5,7 +5,6 @@ import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 
 export default defineConfig({
-  base: "/yjj/",
   server: {
     allowedHosts: ["lzk.medsimverse.com"],
     port: 35684,
