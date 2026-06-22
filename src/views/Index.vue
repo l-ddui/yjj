@@ -26,7 +26,7 @@
           <div class="account-tabs">
             <div v-for="(acc, index) in accountList" :key="acc.id" class="tab-item"
               :class="{ active: selectedAccId === acc.id }" @click="selectAccount(acc.id)">
-              <div class="acc-title">{{ acc.title }}</div>
+              <div class="acc-title">{{ acc.title }}~{{ acc.count }}</div>
             </div>
           </div>
           <div class="btn-refresh-mini" @click="refreshAccountData">🔄</div>

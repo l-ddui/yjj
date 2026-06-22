@@ -1,101 +1,27 @@
 <template>
-  <div class="container">
-    <header class="header">
-      <span>📊 养基宝助手</span>
-      <div v-if="isLoggedIn">
-        <button @click="logout" class="btn-logout">退出</button>
-      </div>
-    </header>
+  <div>
 
-    <div v-if="!isLoggedIn" class="login-panel">
-      <div class="card">
-        <h3>微信扫码登录</h3>
-        <div v-if="qrUrl" class="qr-box">
-          <img :src="`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`"/>
-          <p class="blink-text">{{ loginStatusText }}</p>
-        </div>
-        <button v-else @click="getQrCode" class="btn-primary" :disabled="loading">
-          {{ loading ? '获取中...' : '获取登录二维码' }}
-        </button>
-      </div>
-    </div>
-
-    <div v-else class="main-panel">
-      <div class="fixed-top-area">
-        <div v-if="currentView === 'accounts'" class="account-tab-header">
-          <div class="account-tabs">
-            <div
-                v-for="(acc,index) in accountList"
-                :key="acc.id"
-                class="tab-item"
-                :class="{ active: selectedAccId === acc.id }"
-                @click="selectAccount(acc.id)"
-            >
-              <div class="acc-title">{{ acc.title }}</div>
-            </div>
-          </div>
-          <div class="btn-refresh-mini" @click="refreshAccountData">🔄</div>
-        </div>
-
-        <div v-if="currentView === 'accounts' && holdings.length" class="account-summary-strip !justify-between">
-          <div>
-            <span>账户资产：</span>
-            <span>{{account_assets}}</span>
-          </div>
-          <div>
-            <span class="label mr-2">预估收益:</span>
-            <span class="value" :class="getColorClass(totalEstimatedIncome)">
-            {{ formatValue(totalEstimatedIncome) }}
-          </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="scrollable-wrapper">
-        <div v-if="loading" class="loading-overlay">
-          <div class="spinner"></div>
-          <p>加载中...</p>
-        </div>
-
-        <div v-if="currentView === 'accounts' && selectedAccId" class="detail-section">
-          <table v-show="!loading" class="sticky-table">
-            <thead>
-            <tr>
-              <th class="col-name">基金名称</th>
-              <th class="col-rate">日涨幅</th>
-              <th class="col-earn">日收益</th>
-              <th class="col-earn">持有收益</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="f in holdings" :key="f.code">
-              <td>
-                <div class="f-name">{{ f.short_name }}</div>
-                <div class="f-code">{{ f.code }} 💰{{ f.money }}</div>
-              </td>
-              <td :class="getColorClass(getGszzl(f))">{{ formatValue(getGszzl(f)) }}%</td>
-              <td class="text-center" :class="getColorClass(calcEarn(f))">{{ formatValue(calcEarn(f)) }}</td>
-              <td class="text-center flex flex-col" :class="getColorClass(f.hold_earn)">
-                <span class="font-bold">{{ formatValue(f.hold_earn) }}</span>
-                <span class="text-[13px]" :class="getColorClass(calcRate(f))">{{ formatValue(calcRate(f)) }}%</span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          <div v-if="!loading && !holdings.length" class="empty-state">该账户暂无持仓</div>
-        </div>
-
-        <div v-if="currentView === 'dashboard'" class="dashboard-content"></div>
-      </div>
-    </div>
+    <div v-html="abc"></div>
+    <p style="text-align:center!important;border: 1px solid red;"> <img
+        src="https://f.medsimmeta.com/3Dprint/3DModelDescription/1778666823341_Snipaste_2026-05-13_18-05-40.png" alt=""
+        data-href="https://f.medsimmeta.com/3Dprint/3DModelDescription/1778666823341_Snipaste_2026-05-13_18-05-40.png"
+        style="height: 434.42px; display: inline-block;"></p>
+    <p style="text-align:center!important;border: 1px solid red;">
+      <img src="https://f.medsimmeta.com/3Dprint/3DModelDescription/1778666823341_Snipaste_2026-05-13_18-05-40.png"
+        alt=""
+        data-href="https://f.medsimmeta.com/3Dprint/3DModelDescription/1778666823341_Snipaste_2026-05-13_18-05-40.png"
+        style="max-width: 100%; height: auto;">
+    </p>
   </div>
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 
+
+const abc = ref('<p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">一、</span><strong>病例基础信息 </strong></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">1. </span><strong>疾病诊断：</strong><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">右中叶支气管异物模拟</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\"> </span></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">2. </span><strong>就诊情况：</strong><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">患者因【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">反复咳嗽</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】就诊，专科体格检查提示【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">右侧肺部哮鸣音</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】，结合影像学及实验室检查明确诊断，拟行【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">右中叶支气管异物取出术</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】 </span></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">二、</span><strong>术前检查 </strong></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">1. </span><strong>影像学检查：</strong><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">【CT】检查（层厚【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">0.6914</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">mm】，DICOM格式），明确【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">右中叶支气管内异物</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】 </span></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">2. </span><strong>实验室检查：</strong><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">血常规、肝肾功能、凝血功能等关键指标【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">均正常</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】 </span></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">3. </span><strong>专科评估</strong><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">：【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">呼吸功能正常</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】 </span></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">三、</span><strong>术前规划：</strong></p><p style=\"text-indent: 21pt;\"><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">基于3D模型开展多学科会诊（【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">呼吸内科、胸外科</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】），明确【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">右肺中叶支气管内异物</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】 - 利用模型模拟【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">右肺中叶支气管内异物取出术</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】，制定个性化手术方案及应急预案 </span></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">四、</span><strong>手术实操：</strong></p><p style=\"text-indent: 21pt;\"><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">采用【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">鼻部进入方法</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】，借助3D打印导板精准完成【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">利用内窥镜进入气道</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】 - 术中通过【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">内窥摄像头</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】验证</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">异物</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">位置，调整操作角度，避免损伤【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">气道粘膜</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】 - 术后即刻复查【影像学检查】，确认【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">异物取出</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】 </span></p><p><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">五、</span><strong>术后管理：</strong></p><p style=\"text-indent: 21pt;\"><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">采取</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">半卧位</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">】</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">避免剧烈运动</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">【</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">至少一</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255);\">周】，</span><span style=\"color: rgb(31, 35, 41); background-color: rgb(255, 255, 255); font-family: 宋体;\">定期进行【体温监测】，注意是否再次出现【咳嗽、咳血、呼吸困难】等。术后复查【胸片或胸部CT】，排除【气胸或阻塞性肺炎】。</span></p><p style=\"text-align: center;\"> <img src=\"https://f.medsimmeta.com/3Dprint/3DModelDescription/1778666823341_Snipaste_2026-05-13_18-05-40.png\" alt=\"\" data-href=\"https://f.medsimmeta.com/3Dprint/3DModelDescription/1778666823341_Snipaste_2026-05-13_18-05-40.png\" style=\"width: 677.00px;height: 434.42px;\"></p>')
 const API_BASE = '/api';
 const SECRET = "YxmKSrQR4uoJ5lOoWIhcbd7SlUEh9OOc";
 
@@ -186,16 +112,16 @@ const saveApi = async () => {
     },
     body: JSON.stringify({ token: '132' })
   })
-      .then(response => {
-        if (response.ok) {
-          console.log('Token saved to server');
-        } else {
-          console.error('Failed to save token');
-        }
-      })
-      .catch(error => {
-        console.error('Network error:', error);
-      });
+    .then(response => {
+      if (response.ok) {
+        console.log('Token saved to server');
+      } else {
+        console.error('Failed to save token');
+      }
+    })
+    .catch(error => {
+      console.error('Network error:', error);
+    });
 };
 const fetchAccounts = async () => {
   // saveApi()
@@ -237,7 +163,7 @@ const formatValue = (value) => {
 };
 
 const totalEstimatedIncome = computed(() =>
-    holdings.value.reduce((sum, f) => sum + parseFloat(calcEarn(f)), 0)
+  holdings.value.reduce((sum, f) => sum + parseFloat(calcEarn(f)), 0)
 );
 
 onMounted(() => {
@@ -303,6 +229,7 @@ onMounted(() => {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
